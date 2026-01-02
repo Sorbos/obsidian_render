@@ -1,0 +1,46 @@
+openapi: 3.0.3
+info:
+  title: Model Context Protocol (MCP) reference API
+  version: 0.1.0
+  description: Minimal OpenAPI describing MCP message exchange for reference implementations.
+paths:
+  /v1/message:
+    post:
+      summary: Send an MCP message (prompt/tool/resource)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Message'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+components:
+  schemas:
+    Message:
+      type: object
+      required: [type, payload]
+      properties:
+        type:
+          type: string
+          description: One of `prompt`, `tool`, `resource`.
+        payload:
+          type: object
+          description: Payload for the message; shape depends on `type` and `name` field inside payload.
+          properties:
+            name:
+              type: string
+            args:
+              type: object
+    MessageResponse:
+      type: object
+      properties:
+        result:
+          type: object
+        error:
+          type: string

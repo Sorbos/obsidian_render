@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "obsidian-notes": {
+      "url": "http://localhost:8000/mcp/message",
+      "disabled": false,
+      "autoApprove": [
+        "list_all_notes",
+        "search_notes_content",
+        "get_note_by_id",
+        "search_by_tags"
+      ]
+    }
+  }
+}
