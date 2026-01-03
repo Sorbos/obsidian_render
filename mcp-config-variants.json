@@ -1,0 +1,47 @@
+{
+  "comment": "Try these different configuration formats for Le Chat",
+  
+  "format_1_simple": {
+    "mcpServers": {
+      "obsidian-notes": {
+        "url": "http://localhost:8000/mcp/message"
+      }
+    }
+  },
+  
+  "format_2_detailed": {
+    "mcpServers": {
+      "obsidian-notes": {
+        "url": "http://localhost:8000/mcp/message",
+        "name": "Obsidian Notes",
+        "description": "Access and manage Obsidian notes",
+        "disabled": false
+      }
+    }
+  },
+  
+  "format_3_with_auth": {
+    "mcpServers": {
+      "obsidian-notes": {
+        "url": "http://localhost:8000/mcp/message",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "disabled": false
+      }
+    }
+  },
+  
+  "format_4_anthropic_style": {
+    "servers": {
+      "obsidian-notes": {
+        "url": "http://localhost:8000/mcp/message",
+        "transport": "http"
+      }
+    }
+  },
+  
+  "format_5_minimal": {
+    "obsidian-notes": "http://localhost:8000/mcp/message"
+  }
+}

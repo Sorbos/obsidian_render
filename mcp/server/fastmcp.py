@@ -1,8 +1,9 @@
 import sys
 import json
 import asyncio
-from typing import Any, Callable, Dict
+from typing import Any, Callable, Dict, List
 from fastapi import FastAPI
+from fastapi.responses import JSONResponse
 
 
 class FastMCP:
@@ -23,6 +24,55 @@ class FastMCP:
         @self.app.post("/mcp/message")
         async def handle_message(message: Dict[str, Any]):
             return await self._dispatch(message)
+        
+        # Add MCP protocol endpoints
+        @self.app.post("/initialize")
+        async def initialize(request: Dict[str, Any]):
+            return {
+                "protocolVersion": "2024-11-05",
+                "capabilities": {
+                    "tools": {},
+                    "prompts": {},
+                    "resources": {}
+                },
+                "serverInfo": {
+                    "name": self.name,
+                    "version": "1.0.0"
+                }
+            }
+        
+        @self.app.post("/tools/list")
+        async def list_tools():
+            tools = []
+            for name, fn in self.tools.items():
+                tools.append({
+                    "name": name,
+                    "description": fn.__doc__ or f"Tool: {name}",
+                    "inputSchema": {
+                        "type": "object",
+                        "properties": {},
+                        "required": []
+                    }
+                })
+            return {"tools": tools}
+        
+        @self.app.post("/tools/call")
+        async def call_tool(request: Dict[str, Any]):
+            name = request.get("name")
+            arguments = request.get("arguments", {})
+            
+            if name not in self.tools:
+                return {"error": f"Tool '{name}' not found"}
+            
+            try:
+                fn = self.tools[name]
+                if asyncio.iscoroutinefunction(fn):
+                    result = await fn(**arguments)
+                else:
+                    result = fn(**arguments)
+                return {"content": [{"type": "text", "text": json.dumps(result)}]}
+            except Exception as e:
+                return {"error": str(e)}
 
     def prompt(self, name: str = None):
         def decorator(fn: Callable):
